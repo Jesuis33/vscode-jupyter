@@ -17,6 +17,8 @@ import { BaseKernelProvider } from './kernelProvider.base';
 import { IStatusProvider } from '../platform/progress/types';
 import { InteractiveWindowView } from '../platform/common/constants';
 import { CellOutputDisplayIdTracker } from './execution/cellDisplayIdTracker';
+import { NotebookControllerWrapper } from './notebookControllerWrapper';
+import { KernelConnectionMetadataProxy } from './kernelConnectionMetadataWrapper';
 
 @injectable()
 export class KernelProvider extends BaseKernelProvider {
@@ -50,12 +52,12 @@ export class KernelProvider extends BaseKernelProvider {
         const kernel = new Kernel(
             uri,
             resourceUri,
-            options.metadata,
+            KernelConnectionMetadataProxy.wrap(options.metadata),
             this.notebookProvider,
             waitForIdleTimeout,
             interruptTimeout,
             this.appShell,
-            options.controller,
+            NotebookControllerWrapper.wrap(options.controller),
             this.configService,
             this.outputTracker,
             this.workspaceService,
